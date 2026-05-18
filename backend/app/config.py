@@ -13,10 +13,16 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
     
     # CORS
-    cors_origins: list = os.getenv(
-        "CORS_ORIGINS", 
+    _raw_cors = os.getenv(
+        "CORS_ORIGINS",
         "http://localhost:5173,http://localhost:3000"
-    ).split(",")
+    )
+
+    cors_origins: list = [
+        origin.strip()
+        for origin in _raw_cors.split(",")
+        if origin.strip()
+    ]
     
     class Config:
         env_file = ".env"
