@@ -74,29 +74,16 @@ def upgrade() -> None:
 
     # Обновляем ENUM типы для TicketStatus (REJECTED → CANCELLED)
     op.execute("""
-        DO $$ 
-        BEGIN 
-            -- Проверяем, есть ли уже новый тип enum
-            IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'ticketstatus' AND typtype = 'e' AND typlen = 4) THEN
-                -- 1. Сначала преобразуем столбец в TEXT для безопасной конвертации
-                ALTER TABLE ticket ALTER COLUMN status DROP DEFAULT;
-                ALTER TABLE ticket ALTER COLUMN status TYPE TEXT;
-                
-                -- 2. Обновляем значения: REJECTED -> CANCELLED
-                UPDATE ticket SET status = 'CANCELLED' WHERE status = 'REJECTED';
-                
-                -- 3. Создаём новый ENUM тип
-                CREATE TYPE ticketstatus_new AS ENUM ('NEW', 'IN_PROGRESS', 'DONE', 'CANCELLED');
-                
-                -- 4. Преобразуем столбец обратно в новый ENUM
-                ALTER TABLE ticket ALTER COLUMN status TYPE ticketstatus_new USING status::ticketstatus_new;
-                
-                -- 5. Устанавливаем новое значение по умолчанию
-                ALTER TABLE ticket ALTER COLUMN status SET DEFAULT 'NEW'::ticketstatus_new;
-                
-                -- 6. Удаляем старый тип enum и переименовываем новый
-                DROP TYPE ticketstatus;
-                ALTER TYPE ticketstatus_new RENAME TO ticketstatus;
+        DO $$
+        BEGIN
+            IF NOT EXISTS (
+                SELECT 1
+                FROM pg_enum e
+                JOIN pg_type t ON e.enumtypid = t.oid
+                WHERE t.typname = 'ticketstatus'
+                AND e.enumlabel = 'CANCELLED'
+            ) THEN
+                ALTER TYPE ticketstatus ADD VALUE 'CANCELLED';
             END IF;
         END
         $$;
