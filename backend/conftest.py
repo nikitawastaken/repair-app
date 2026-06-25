@@ -1,5 +1,5 @@
 """
-Конфигурация для pytest: фиксции и общие настройки.
+Конфигурация для pytest: фикстуры и общие настройки.
 """
 import pytest
 from app.database import drop_db, init_db

@@ -46,7 +46,7 @@ echo ""
 
 # Тесты
 echo "🧪 Тестирование:"
-echo "  - Фаззинг-тесты: 7 тестов (hypothesis)"
+echo "  - Тесты: пока не реализованы"
 echo "  - Покрытие: API stability (status < 500)"
 echo ""
 

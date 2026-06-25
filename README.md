@@ -195,7 +195,7 @@ repair-app/
 │   │   └── seed.py              # Инициализация данных
 │   ├── alembic/                 # Миграции БД
 │   │   └── versions/            # Версии миграций
-│   ├── tests/                   # Тесты (включая фаззинг)
+│   ├── tests/                   # Тесты
 │   └── requirements.txt
 ├── frontend/                     # Vue 3 + Vite
 │   ├── src/
@@ -236,9 +236,6 @@ docker-compose exec backend alembic upgrade head
 # Откатить миграции
 docker-compose exec backend alembic downgrade -1
 
-# Запустить тесты (фаззинг)
-docker-compose exec backend pytest tests/test_fuzz.py -v
-
 # Запустить seed
 docker-compose exec backend python -m app.seed
 ```
@@ -276,8 +273,7 @@ docker-compose exec backend python -m app.seed
 1. **Timezone-aware datetimes**: Все timestamp'ы хранятся в UTC с указанием часового пояса
 2. **Идемпотентный seed**: Запуск `seed.py` несколько раз не создаёт дубликаты
 3. **RBAC в зависимостях**: `get_current_user`, `get_current_admin`, `get_current_master`, `get_current_client`
-4. **Фаззинг-тесты**: Hypothesis стратегии для тестирования API с произвольными данными
-5. **Миграции БД**: Используется Alembic для версионирования схемы
+4. **Миграции БД**: Используется Alembic для версионирования схемы
 6. **Blocking users**: Заблокированные пользователи не могут логиниться (HTTP 403)
 
 ## Развёртывание в облаке
