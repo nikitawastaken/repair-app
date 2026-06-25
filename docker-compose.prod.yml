@@ -40,16 +40,16 @@ services:
     restart: unless-stopped
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
-  # Frontend (Vue + Vite)
+  # Frontend (Vue + Nginx static build)
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
       args:
         - VITE_API_URL=${VITE_API_URL}
     container_name: repair_app_frontend_prod
     ports:
-      - "5173:5173"
+      - "5173:80"
     networks:
       - repair_network_prod
     restart: unless-stopped
