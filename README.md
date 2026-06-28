@@ -273,7 +273,8 @@ docker-compose exec backend python -m app.seed
 1. **Timezone-aware datetimes**: Все timestamp'ы хранятся в UTC с указанием часового пояса
 2. **Идемпотентный seed**: Запуск `seed.py` несколько раз не создаёт дубликаты
 3. **RBAC в зависимостях**: `get_current_user`, `get_current_admin`, `get_current_master`, `get_current_client`
-4. **Миграции БД**: Используется Alembic для версионирования схемы
+4. **Фаззинг-тесты**: Hypothesis стратегии для property-based testing API с произвольными данными
+5. **Миграции БД**: Используется Alembic для версионирования схемы
 6. **Blocking users**: Заблокированные пользователи не могут логиниться (HTTP 403)
 
 ## Развёртывание в облаке

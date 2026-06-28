@@ -8,8 +8,8 @@ set -e
 echo "🧪 Запуск тестов..."
 echo ""
 
-echo "Running backend tests..."
-docker-compose exec -T backend pytest -q
+echo "Running fuzzing tests with hypothesis..."
+docker-compose exec -T backend pytest tests/test_fuzz.py -v
 
 echo ""
 echo "✅ Все тесты пройдены!"

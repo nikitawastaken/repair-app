@@ -1,35 +1,29 @@
 """
-Конфигурация для создания тестовых пользователей и вспомогательные функции для тестов.
+Конфигурация для pytest: фиксции и общие настройки для фаззинг-тестов.
 """
-import asyncio
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+import pytest
+from sqlalchemy import text
 
-from app.models.user import User, UserRole
-from app.services.auth_service import hash_password
+from app.database import async_session_maker
 
 
-# Используется для создания тестовой БД
-TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+# ==================== Очистка БД между тестами ====================
 
-
-async def get_test_session():
-    """Создаёт сессию для тестирования с in-memory БД."""
-    engine = create_async_engine(
-        TEST_DATABASE_URL,
-        echo=False,
-        future=True,
-    )
+@pytest.fixture(autouse=True)
+async def cleanup_db_before_fuzz():
+    """Очищает данные из БД ДО каждого примера фаззинга.
     
-    # Создаём таблицы
-    async with engine.begin() as conn:
-        pass  # Миграции применяются отдельно
-    
-    async_session_maker = sessionmaker(
-        engine,
-        class_=AsyncSession,
-        expire_on_commit=False,
-    )
-    
+    Это позволяет избежать конфликтов asyncpg 'another operation in progress'.
+    """
+    # Перед тестом - очищаем таблицы
     async with async_session_maker() as session:
-        yield session
+        try:
+            # Очищаем в правильном порядке (учитывая FK)
+            await session.execute(text("DELETE FROM tickets"))
+            await session.execute(text("DELETE FROM users"))
+            await session.commit()
+        except Exception:
+            pass  # Игнорируем ошибки очистки
+    
+    yield
+
