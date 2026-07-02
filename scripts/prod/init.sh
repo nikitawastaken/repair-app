@@ -9,8 +9,8 @@ echo "🚀 Инициализация Repair App (prod)..."
 
 echo ""
 if [ ! -f .env.prod ]; then
-    echo "📝 Копирование .env.example в .env.prod..."
-    cp .env.example .env.prod
+    echo "📝 Копирование .env.prod.example в .env.prod..."
+    cp .env.prod.example .env.prod
     echo "✅ .env.prod создан"
 fi
 

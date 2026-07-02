@@ -68,7 +68,7 @@ category_strategy = st.text(
     full_name=st.text(min_size=1, max_size=50)
 )
 @settings(
-    max_examples=1,
+    max_examples=50,
     suppress_health_check=[HealthCheck.too_slow, HealthCheck.filter_too_much],
     deadline=None
 )
@@ -95,7 +95,7 @@ def test_register_with_arbitrary_strings(email, password, full_name):
 
 @given(email=email_strategy, password=password_strategy)
 @settings(
-    max_examples=1,
+    max_examples=50,
     suppress_health_check=[HealthCheck.too_slow, HealthCheck.filter_too_much],
     deadline=None
 )
@@ -126,7 +126,7 @@ def test_login_with_arbitrary_credentials(email, password):
     category=category_strategy,
 )
 @settings(
-    max_examples=1,
+    max_examples=50,
     suppress_health_check=[HealthCheck.too_slow, HealthCheck.filter_too_much],
     deadline=None
 )
@@ -158,7 +158,7 @@ def test_create_ticket_with_arbitrary_values(title, description, price, address,
     price_max=st.floats(min_value=0, max_value=100000, allow_nan=False, allow_infinity=False)
 )
 @settings(
-    max_examples=1,
+    max_examples=50,
     suppress_health_check=[HealthCheck.too_slow, HealthCheck.filter_too_much],
     deadline=None
 )
@@ -181,7 +181,7 @@ def test_get_tickets_with_arbitrary_price_range(price_min, price_max):
 
 @given(category=category_strategy)
 @settings(
-    max_examples=1,
+    max_examples=50,
     suppress_health_check=[HealthCheck.too_slow, HealthCheck.filter_too_much],
     deadline=None
 )
@@ -202,7 +202,7 @@ def test_get_tickets_with_arbitrary_category(category):
 
 @given(ticket_id=st.integers(min_value=0, max_value=999999))
 @settings(
-    max_examples=1,
+    max_examples=50,
     suppress_health_check=[HealthCheck.too_slow, HealthCheck.filter_too_much],
     deadline=None
 )
