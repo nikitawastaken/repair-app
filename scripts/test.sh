@@ -9,7 +9,7 @@ echo "🧪 Запуск тестов..."
 echo ""
 
 echo "Running fuzzing tests with hypothesis..."
-docker-compose exec -T backend pytest tests/test_fuzz.py -v
+docker-compose exec -T -e TESTING=1 backend pytest tests/test_fuzz.py -v
 
 echo ""
 echo "✅ Все тесты пройдены!"
